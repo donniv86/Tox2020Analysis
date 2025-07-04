@@ -1,265 +1,163 @@
 #!/usr/bin/env python3
 """
-Example usage of the Toxicity Prediction System
+Example usage of the modular Tox21 modeling pipeline.
+
+This script demonstrates different ways to use the clean, modular structure.
 """
 
-import pandas as pd
-import os
 import sys
+from src.pipeline_manager import PipelineManager
+from utils import Tox21Utils
+from config import PIPELINE_CONFIG, DEFAULT_TARGET_INDICES
 
-# Add src to path
-sys.path.append('src')
+def example_1_basic_pipeline():
+    """Example 1: Basic pipeline usage."""
+    print("=" * 60)
+    print("Example 1: Basic Pipeline Usage")
+    print("=" * 60)
 
-from data_processing import Tox21DataLoader
-from feature_engineering import MolecularFeatureGenerator
-from models import ToxicityPredictor
+    # Initialize pipeline
+    pipeline = PipelineManager(PIPELINE_CONFIG)
 
+    # Run for specific targets
+    results = pipeline.run_pipeline(target_indices=[0])  # Just NR-AR
 
-def create_example_data():
-    """Create example SMILES data for testing."""
-    example_smiles = [
-        "CC(C)CC1=CC=C(C=C1)C(C)C(=O)O",  # Ibuprofen
-        "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5",  # Gefitinib
-        "CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F",  # Celecoxib
-        "CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F",  # Celecoxib
-        "CC(C)(C)OC(=O)N[C@@H](CC1=CC=CC=C1)C(=O)O",  # Aspirin
-        "CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F",  # Celecoxib
-        "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5",  # Gefitinib
-        "CC(C)CC1=CC=C(C=C1)C(C)C(=O)O",  # Ibuprofen
-    ]
-
-    # Create DataFrame
-    df = pd.DataFrame({
-        'compound_id': [f'compound_{i+1}' for i in range(len(example_smiles))],
-        'smiles': example_smiles
-    })
-
-    # Save to CSV
-    os.makedirs('example_data', exist_ok=True)
-    df.to_csv('example_data/example_compounds.csv', index=False)
-    print("Created example data: example_data/example_compounds.csv")
-
-    return df
-
-
-def train_models():
-    """Train models on Tox21 data."""
-    print("Training models on Tox21 data...")
-
-    # Load Tox21 data
-    loader = Tox21DataLoader("data/tox21_10k_data_all.sdf")
-    data = loader.load_data()
-
-    # Generate features
-    feature_gen = MolecularFeatureGenerator()
-    X = feature_gen.generate_features(
-        data['compounds']['smiles'].tolist(),
-        use_morgan=True,
-        use_maccs=True,
-        use_descriptors=True
-    )
-
-    # Split data
-    splits = loader.split_data(test_size=0.2, random_state=42)
-
-    X_train = feature_gen.generate_features(
-        splits['train']['compounds']['smiles'].tolist(),
-        use_morgan=True,
-        use_maccs=True,
-        use_descriptors=True
-    )
-
-    y_train = splits['train']['targets']
-
-    # Train model
-    predictor = ToxicityPredictor('random_forest')
-    predictor.train(X_train, y_train)
-
-    # Save models
-    os.makedirs('models', exist_ok=True)
-    predictor.save_models('models/random_forest_models.pkl')
-    print("Models trained and saved to: models/random_forest_models.pkl")
-
-    return predictor
-
-
-def predict_toxicity_example():
-    """Example of toxicity prediction."""
-    print("\n" + "="*60)
-    print("TOXICITY PREDICTION EXAMPLE")
-    print("="*60)
-
-    # Create example data
-    example_df = create_example_data()
-
-    # Train models (or load if available)
-    if os.path.exists('models/random_forest_models.pkl'):
-        print("Loading pre-trained models...")
-        predictor = ToxicityPredictor('random_forest')
-        predictor.load_models('models/random_forest_models.pkl')
-    else:
-        print("Training new models...")
-        predictor = train_models()
-
-    # Generate features for example compounds
-    feature_gen = MolecularFeatureGenerator()
-    X_example = feature_gen.generate_features(
-        example_df['smiles'].tolist(),
-        use_morgan=True,
-        use_maccs=True,
-        use_descriptors=True
-    )
-
-    # Make predictions
-    predictions = predictor.predict(X_example)
-
-    # Create results
-    results = example_df.copy()
-    target_columns = [
-        'NR-Aromatase', 'NR-AR', 'NR-AR-LBD', 'NR-ER', 'NR-ER-LBD',
-        'NR-PPAR-gamma', 'NR-AhR', 'SR-ARE', 'SR-ATAD5', 'SR-HSE',
-        'SR-MMP', 'SR-p53'
-    ]
-
-    for target in target_columns:
-        if target in predictions.columns:
-            results[f'{target}_probability'] = predictions[target]
-            results[f'{target}_prediction'] = (predictions[target] > 0.5).astype(int)
-            results[f'{target}_toxicity'] = classify_toxicity(predictions[target])
-
-    # Display results
-    print("\nToxicity Predictions:")
-    print("-" * 80)
-
-    for idx, row in results.iterrows():
-        print(f"\nCompound: {row['compound_id']}")
-        print(f"SMILES: {row['smiles']}")
-        print("Toxicity Predictions:")
-
-        toxic_count = 0
-        moderate_count = 0
-        non_toxic_count = 0
-
-        for target in target_columns:
-            tox_col = f'{target}_toxicity'
-            prob_col = f'{target}_probability'
-
-            if tox_col in row and prob_col in row:
-                toxicity = row[tox_col]
-                probability = row[prob_col]
-
-                if toxicity == 'Toxic':
-                    toxic_count += 1
-                    color = '🔴'
-                elif toxicity == 'Moderate':
-                    moderate_count += 1
-                    color = '🟡'
-                else:
-                    non_toxic_count += 1
-                    color = '🟢'
-
-                print(f"  {color} {target}: {toxicity} ({probability:.3f})")
-
-        # Overall summary
-        print(f"\nOverall: {toxic_count} Toxic, {moderate_count} Moderate, {non_toxic_count} Non-toxic")
-
-        if toxic_count > 0:
-            print("⚠️  WARNING: This compound shows toxic properties!")
-        elif moderate_count > 0:
-            print("⚠️  CAUTION: This compound shows moderate toxicity.")
-        else:
-            print("✅ SAFE: This compound appears non-toxic.")
-
-    # Save detailed results
-    os.makedirs('results', exist_ok=True)
-    results.to_csv('results/toxicity_predictions_example.csv', index=False)
-    print(f"\nDetailed results saved to: results/toxicity_predictions_example.csv")
-
+    print(f"✅ Processed {len(results)} targets")
     return results
 
+def example_2_custom_configuration():
+    """Example 2: Custom configuration."""
+    print("\n" + "=" * 60)
+    print("Example 2: Custom Configuration")
+    print("=" * 60)
 
-def classify_toxicity(probabilities):
-    """Classify toxicity based on probability thresholds."""
-    classifications = []
-    for prob in probabilities:
-        if prob < 0.3:
-            classifications.append('Non-toxic')
-        elif prob < 0.7:
-            classifications.append('Moderate')
-        else:
-            classifications.append('Toxic')
-    return classifications
+    # Custom configuration
+    custom_config = PIPELINE_CONFIG.copy()
+    custom_config['cv_folds'] = 3  # Fewer CV folds for faster execution
+    custom_config['models'] = ['RandomForest']  # Only RandomForest
+    custom_config['feature_selection']['top_n_model'] = 100  # Fewer features
 
+    print(f"Custom config: {custom_config['cv_folds']}-fold CV, {len(custom_config['models'])} models")
 
-def create_simple_report(results_df):
-    """Create a simple text report."""
-    print("\n" + "="*60)
-    print("TOXICITY PREDICTION REPORT")
-    print("="*60)
+    # Initialize with custom config
+    pipeline = PipelineManager(custom_config)
 
-    target_columns = [
-        'NR-Aromatase', 'NR-AR', 'NR-AR-LBD', 'NR-ER', 'NR-ER-LBD',
-        'NR-PPAR-gamma', 'NR-AhR', 'SR-ARE', 'SR-ATAD5', 'SR-HSE',
-        'SR-MMP', 'SR-p53'
-    ]
+    # Run pipeline
+    results = pipeline.run_pipeline(target_indices=[7])  # SR-ARE
 
-    # Summary statistics
-    total_compounds = len(results_df)
-    print(f"\nTotal Compounds Analyzed: {total_compounds}")
+    print(f"✅ Processed with custom configuration")
+    return results
 
-    # Target-wise summary
-    print("\nTarget-wise Toxicity Summary:")
-    print("-" * 50)
+def example_3_utility_functions():
+    """Example 3: Using utility functions."""
+    print("\n" + "=" * 60)
+    print("Example 3: Utility Functions")
+    print("=" * 60)
 
-    for target in target_columns:
-        tox_col = f'{target}_toxicity'
-        if tox_col in results_df.columns:
-            toxicity_counts = results_df[tox_col].value_counts()
-            print(f"\n{target}:")
-            for toxicity, count in toxicity_counts.items():
-                print(f"  {toxicity}: {count} compounds")
+    utils = Tox21Utils()
 
-    # Overall compound summary
-    print("\nCompound-wise Summary:")
-    print("-" * 50)
+    # List available targets
+    targets = utils.list_available_targets()
+    print(f"Available targets: {targets}")
 
-    for idx, row in results_df.iterrows():
-        toxic_count = 0
-        moderate_count = 0
-        non_toxic_count = 0
+    if not targets:
+        print("No trained models found. Run examples 1 or 2 first.")
+        return
 
-        for target in target_columns:
-            tox_col = f'{target}_toxicity'
-            if tox_col in row and pd.notna(row[tox_col]):
-                if row[tox_col] == 'Toxic':
-                    toxic_count += 1
-                elif row[tox_col] == 'Moderate':
-                    moderate_count += 1
-                else:
-                    non_toxic_count += 1
+    # Get performance summary
+    target_name = targets[0]
+    summary = utils.get_performance_summary(target_name)
+    print(f"\nPerformance summary for {target_name}:")
+    for key, value in summary.items():
+        if key != 'target_name':
+            print(f"  {key}: {value}")
 
-        print(f"\n{row['compound_id']}:")
-        print(f"  Toxic targets: {toxic_count}")
-        print(f"  Moderate targets: {moderate_count}")
-        print(f"  Non-toxic targets: {non_toxic_count}")
+    # Compare targets (if multiple available)
+    if len(targets) > 1:
+        print(f"\nComparing {len(targets)} targets:")
+        comparison = utils.compare_targets(targets)
+        print(comparison[['target_name', 'best_model', 'roc_auc', 'f1_score']].to_string(index=False))
 
-        if toxic_count > 0:
-            print("  ⚠️  OVERALL: TOXIC")
-        elif moderate_count > 0:
-            print("  ⚠️  OVERALL: MODERATE TOXICITY")
-        else:
-            print("  ✅ OVERALL: SAFE")
+def example_4_model_loading():
+    """Example 4: Loading and using trained models."""
+    print("\n" + "=" * 60)
+    print("Example 4: Model Loading")
+    print("=" * 60)
 
+    utils = Tox21Utils()
+    targets = utils.list_available_targets()
+
+    if not targets:
+        print("No trained models found. Run examples 1 or 2 first.")
+        return
+
+    target_name = targets[0]
+
+    # Load model and feature selector
+    model_data = utils.load_model_and_features(target_name)
+    print(f"✅ Loaded model for {target_name}")
+    print(f"   Model type: {type(model_data['model']).__name__}")
+    print(f"   Selected features: {len(model_data['selected_features'])}")
+
+    # Example: Create dummy data for prediction (in real usage, this would be actual molecular descriptors)
+    import numpy as np
+    n_samples = 5
+    n_features = len(model_data['selected_features'])
+
+    # Create dummy descriptors (this is just for demonstration)
+    dummy_descriptors = np.random.randn(n_samples, n_features)
+    dummy_feature_names = model_data['selected_features']
+
+    try:
+        # Make predictions
+        predictions = utils.predict_toxicity(target_name, dummy_descriptors, dummy_feature_names)
+        print(f"✅ Made predictions for {n_samples} compounds")
+        print(f"   Predictions: {predictions['predictions']}")
+        print(f"   Probabilities: {predictions['probabilities'][:3]}...")  # Show first 3
+    except Exception as e:
+        print(f"⚠️  Prediction failed (expected with dummy data): {str(e)}")
+
+def example_5_configuration_exploration():
+    """Example 5: Exploring configuration options."""
+    print("\n" + "=" * 60)
+    print("Example 5: Configuration Exploration")
+    print("=" * 60)
+
+    print("Available configuration options:")
+    print(f"  Models: {PIPELINE_CONFIG['models']}")
+    print(f"  CV folds: {PIPELINE_CONFIG['cv_folds']}")
+    print(f"  Feature selection: {PIPELINE_CONFIG['feature_selection']}")
+    print(f"  Min samples: {PIPELINE_CONFIG['min_samples']}")
+    print(f"  Min positive samples: {PIPELINE_CONFIG['min_positive_samples']}")
+
+    print(f"\nDefault target indices: {DEFAULT_TARGET_INDICES}")
+    print(f"All available targets: {len(PIPELINE_CONFIG.get('ALL_TARGETS', []))} targets")
+
+def main():
+    """Run all examples."""
+    print("🚀 Tox21 Modeling Pipeline - Example Usage")
+    print("This script demonstrates the modular pipeline structure.\n")
+
+    try:
+        # Run examples
+        example_1_basic_pipeline()
+        example_2_custom_configuration()
+        example_3_utility_functions()
+        example_4_model_loading()
+        example_5_configuration_exploration()
+
+        print("\n" + "=" * 60)
+        print("✅ All examples completed successfully!")
+        print("📚 Check MODULAR_STRUCTURE.md for detailed documentation")
+        print("🔧 Modify config.py to experiment with different settings")
+
+    except KeyboardInterrupt:
+        print("\n⚠️  Examples interrupted by user.")
+    except Exception as e:
+        print(f"\n❌ Examples failed: {str(e)}")
+        return 1
+
+    return 0
 
 if __name__ == "__main__":
-    # Run the example
-    results = predict_toxicity_example()
-    create_simple_report(results)
-
-    print("\n" + "="*60)
-    print("EXAMPLE COMPLETED!")
-    print("="*60)
-    print("\nTo use with your own data:")
-    print("1. Create a CSV file with 'compound_id' and 'smiles' columns")
-    print("2. Run: python toxicity_predictor.py your_file.csv")
-    print("3. Check the results/ directory for detailed reports")
+    sys.exit(main())

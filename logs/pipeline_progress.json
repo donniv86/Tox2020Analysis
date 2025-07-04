@@ -1,0 +1,507 @@
+{
+  "completed_targets": [
+    "NR-AR",
+    "SR-ARE"
+  ],
+  "pipeline_log": [
+    {
+      "timestamp": "2025-07-04T17:25:16.816319",
+      "step": "PIPELINE_START",
+      "message": "Starting full-fledged model building pipeline",
+      "elapsed_seconds": 0.0007319450378417969
+    },
+    {
+      "timestamp": "2025-07-04T17:25:16.816350",
+      "step": "PIPELINE_START",
+      "message": "Step 1: Data loading and preparation",
+      "elapsed_seconds": 0.0007638931274414062
+    },
+    {
+      "timestamp": "2025-07-04T17:25:16.816371",
+      "step": "DATA_LOADING",
+      "message": "Starting data loading and preparation",
+      "elapsed_seconds": 0.0007848739624023438
+    },
+    {
+      "timestamp": "2025-07-04T17:25:16.816393",
+      "step": "DATA_LOADING",
+      "message": "Loading descriptors...",
+      "elapsed_seconds": 0.0008068084716796875
+    },
+    {
+      "timestamp": "2025-07-04T17:25:16.900857",
+      "step": "DATA_LOADING",
+      "message": "Loaded: 11761 samples, 4545 features",
+      "elapsed_seconds": 0.08526802062988281
+    },
+    {
+      "timestamp": "2025-07-04T17:25:16.900999",
+      "step": "DATA_LOADING",
+      "message": "Loading target labels...",
+      "elapsed_seconds": 0.08541274070739746
+    },
+    {
+      "timestamp": "2025-07-04T17:25:18.452036",
+      "step": "DATA_LOADING",
+      "message": "Loaded: 12 targets",
+      "elapsed_seconds": 1.6364479064941406
+    },
+    {
+      "timestamp": "2025-07-04T17:25:18.452168",
+      "step": "DATA_PREPROCESSING",
+      "message": "Starting data preprocessing...",
+      "elapsed_seconds": 1.6365807056427002
+    },
+    {
+      "timestamp": "2025-07-04T17:25:19.138881",
+      "step": "DATA_PREPROCESSING",
+      "message": "Final dataset: 2543 samples, 2452 features",
+      "elapsed_seconds": 2.323291778564453
+    },
+    {
+      "timestamp": "2025-07-04T17:25:19.139888",
+      "step": "DATA_ANALYSIS",
+      "message": "Target statistics calculated for 12 targets",
+      "elapsed_seconds": 2.32430100440979
+    },
+    {
+      "timestamp": "2025-07-04T17:25:19.139934",
+      "step": "PIPELINE_START",
+      "message": "Step 2: Model building",
+      "elapsed_seconds": 2.324347972869873
+    },
+    {
+      "timestamp": "2025-07-04T17:25:19.139981",
+      "step": "PIPELINE_PROGRESS",
+      "message": "Processing 3 targets, 0 already completed",
+      "elapsed_seconds": 2.324394941329956
+    },
+    {
+      "timestamp": "2025-07-04T17:25:19.140009",
+      "step": "TARGET_PROCESSING",
+      "message": "Processing target 1/3: NR-AR",
+      "elapsed_seconds": 2.3244218826293945
+    },
+    {
+      "timestamp": "2025-07-04T17:25:19.140050",
+      "step": "FEATURE_SELECTION",
+      "message": "Starting feature selection for NR-AR",
+      "elapsed_seconds": 2.3244638442993164
+    },
+    {
+      "timestamp": "2025-07-04T17:25:19.140077",
+      "step": "FEATURE_SELECTION",
+      "message": "Parameters: {'correlation_threshold': 0.9, 'univariate_k': 500, 'top_n_model': 150}",
+      "elapsed_seconds": 2.324491024017334
+    },
+    {
+      "timestamp": "2025-07-04T17:26:09.872845",
+      "step": "FEATURE_SELECTION",
+      "message": "Features reduced: 2452 \u2192 150 (6.1%) in 50.7s",
+      "elapsed_seconds": 53.057254791259766
+    },
+    {
+      "timestamp": "2025-07-04T17:26:09.873315",
+      "step": "MODEL_TRAINING",
+      "message": "Starting model training for NR-AR with 5-fold CV",
+      "elapsed_seconds": 53.0577290058136
+    },
+    {
+      "timestamp": "2025-07-04T17:26:09.873447",
+      "step": "MODEL_TRAINING",
+      "message": "Training RandomForest for NR-AR",
+      "elapsed_seconds": 53.05786085128784
+    },
+    {
+      "timestamp": "2025-07-04T17:26:09.993744",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 1/5 completed in 0.1s",
+      "elapsed_seconds": 53.17815709114075
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.113733",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 2/5 completed in 0.1s",
+      "elapsed_seconds": 53.29814600944519
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.232734",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 3/5 completed in 0.1s",
+      "elapsed_seconds": 53.41714572906494
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.354050",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 4/5 completed in 0.1s",
+      "elapsed_seconds": 53.53846287727356
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.476754",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 5/5 completed in 0.1s",
+      "elapsed_seconds": 53.66116690635681
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.477001",
+      "step": "MODEL_TRAINING",
+      "message": "RandomForest completed in 0.6s",
+      "elapsed_seconds": 53.66141390800476
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.477043",
+      "step": "MODEL_PERFORMANCE",
+      "message": "RandomForest - ROC-AUC: 0.998\u00b10.003",
+      "elapsed_seconds": 53.66145586967468
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.477070",
+      "step": "MODEL_TRAINING",
+      "message": "Training LogisticRegression for NR-AR",
+      "elapsed_seconds": 53.66148400306702
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.688642",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 1/5 completed in 0.2s",
+      "elapsed_seconds": 53.87305402755737
+    },
+    {
+      "timestamp": "2025-07-04T17:26:10.894062",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 2/5 completed in 0.2s",
+      "elapsed_seconds": 54.07847499847412
+    },
+    {
+      "timestamp": "2025-07-04T17:26:11.101038",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 3/5 completed in 0.2s",
+      "elapsed_seconds": 54.28545093536377
+    },
+    {
+      "timestamp": "2025-07-04T17:26:11.304200",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 4/5 completed in 0.2s",
+      "elapsed_seconds": 54.48861289024353
+    },
+    {
+      "timestamp": "2025-07-04T17:26:11.506279",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 5/5 completed in 0.2s",
+      "elapsed_seconds": 54.69069170951843
+    },
+    {
+      "timestamp": "2025-07-04T17:26:11.506533",
+      "step": "MODEL_TRAINING",
+      "message": "LogisticRegression completed in 1.0s",
+      "elapsed_seconds": 54.69094705581665
+    },
+    {
+      "timestamp": "2025-07-04T17:26:11.506571",
+      "step": "MODEL_PERFORMANCE",
+      "message": "LogisticRegression - ROC-AUC: 0.932\u00b10.061",
+      "elapsed_seconds": 54.69098496437073
+    },
+    {
+      "timestamp": "2025-07-04T17:26:11.506598",
+      "step": "MODEL_TRAINING",
+      "message": "Training SVM for NR-AR",
+      "elapsed_seconds": 54.691011905670166
+    },
+    {
+      "timestamp": "2025-07-04T17:26:12.091323",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 1/5 completed in 0.6s",
+      "elapsed_seconds": 55.27573609352112
+    },
+    {
+      "timestamp": "2025-07-04T17:26:12.575480",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 2/5 completed in 0.5s",
+      "elapsed_seconds": 55.759891986846924
+    },
+    {
+      "timestamp": "2025-07-04T17:26:12.803999",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 3/5 completed in 0.2s",
+      "elapsed_seconds": 55.98841190338135
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.388854",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 4/5 completed in 0.6s",
+      "elapsed_seconds": 56.57326698303223
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.921630",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 5/5 completed in 0.5s",
+      "elapsed_seconds": 57.10604286193848
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.921865",
+      "step": "MODEL_TRAINING",
+      "message": "SVM completed in 2.4s",
+      "elapsed_seconds": 57.10627889633179
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.921901",
+      "step": "MODEL_PERFORMANCE",
+      "message": "SVM - ROC-AUC: 0.924\u00b10.059",
+      "elapsed_seconds": 57.10631489753723
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.921947",
+      "step": "MODEL_TRAINING",
+      "message": "All models for NR-AR completed in 4.0s",
+      "elapsed_seconds": 57.10635995864868
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.921971",
+      "step": "MODEL_SELECTION",
+      "message": "Best model for NR-AR: RandomForest",
+      "elapsed_seconds": 57.10638475418091
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.922074",
+      "step": "RESULT_SAVING",
+      "message": "Saving results for NR-AR",
+      "elapsed_seconds": 57.10648798942566
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.927430",
+      "step": "REPORTING",
+      "message": "Creating comprehensive report for NR-AR",
+      "elapsed_seconds": 57.111841917037964
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.928546",
+      "step": "REPORTING",
+      "message": "Model comparison for NR-AR completed",
+      "elapsed_seconds": 57.11295795440674
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.931843",
+      "step": "RESULT_SAVING",
+      "message": "Results saved: results/NR-AR_full_results.pkl, results/NR-AR_feature_selector.pkl, results/NR-AR_best_model.pkl, results/NR-AR_model_comparison.csv",
+      "elapsed_seconds": 57.11625599861145
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.932473",
+      "step": "TARGET_COMPLETE",
+      "message": "\u2713 Completed NR-AR",
+      "elapsed_seconds": 57.11688590049744
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.932507",
+      "step": "TARGET_PROCESSING",
+      "message": "Processing target 2/3: SR-ARE",
+      "elapsed_seconds": 57.11691999435425
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.932577",
+      "step": "FEATURE_SELECTION",
+      "message": "Starting feature selection for SR-ARE",
+      "elapsed_seconds": 57.11699104309082
+    },
+    {
+      "timestamp": "2025-07-04T17:26:13.932605",
+      "step": "FEATURE_SELECTION",
+      "message": "Parameters: {'correlation_threshold': 0.9, 'univariate_k': 500, 'top_n_model': 150}",
+      "elapsed_seconds": 57.117018938064575
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.150221",
+      "step": "FEATURE_SELECTION",
+      "message": "Features reduced: 2452 \u2192 150 (6.1%) in 51.2s",
+      "elapsed_seconds": 108.33463382720947
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.151230",
+      "step": "MODEL_TRAINING",
+      "message": "Starting model training for SR-ARE with 5-fold CV",
+      "elapsed_seconds": 108.33564376831055
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.151313",
+      "step": "MODEL_TRAINING",
+      "message": "Training RandomForest for SR-ARE",
+      "elapsed_seconds": 108.33572578430176
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.274005",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 1/5 completed in 0.1s",
+      "elapsed_seconds": 108.45841693878174
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.396699",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 2/5 completed in 0.1s",
+      "elapsed_seconds": 108.58111095428467
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.520045",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 3/5 completed in 0.1s",
+      "elapsed_seconds": 108.70445680618286
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.641990",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 4/5 completed in 0.1s",
+      "elapsed_seconds": 108.82640314102173
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.766846",
+      "step": "CV_FOLD",
+      "message": "RandomForest - Fold 5/5 completed in 0.1s",
+      "elapsed_seconds": 108.95125889778137
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.767082",
+      "step": "MODEL_TRAINING",
+      "message": "RandomForest completed in 0.6s",
+      "elapsed_seconds": 108.951495885849
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.767120",
+      "step": "MODEL_PERFORMANCE",
+      "message": "RandomForest - ROC-AUC: 1.000\u00b10.000",
+      "elapsed_seconds": 108.95153379440308
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.767147",
+      "step": "MODEL_TRAINING",
+      "message": "Training LogisticRegression for SR-ARE",
+      "elapsed_seconds": 108.9515609741211
+    },
+    {
+      "timestamp": "2025-07-04T17:27:05.973873",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 1/5 completed in 0.2s",
+      "elapsed_seconds": 109.15828490257263
+    },
+    {
+      "timestamp": "2025-07-04T17:27:06.166292",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 2/5 completed in 0.2s",
+      "elapsed_seconds": 109.35070371627808
+    },
+    {
+      "timestamp": "2025-07-04T17:27:06.363477",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 3/5 completed in 0.2s",
+      "elapsed_seconds": 109.54788994789124
+    },
+    {
+      "timestamp": "2025-07-04T17:27:06.561118",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 4/5 completed in 0.2s",
+      "elapsed_seconds": 109.74552989006042
+    },
+    {
+      "timestamp": "2025-07-04T17:27:06.761259",
+      "step": "CV_FOLD",
+      "message": "LogisticRegression - Fold 5/5 completed in 0.2s",
+      "elapsed_seconds": 109.9456717967987
+    },
+    {
+      "timestamp": "2025-07-04T17:27:06.761503",
+      "step": "MODEL_TRAINING",
+      "message": "LogisticRegression completed in 1.0s",
+      "elapsed_seconds": 109.94591689109802
+    },
+    {
+      "timestamp": "2025-07-04T17:27:06.761537",
+      "step": "MODEL_PERFORMANCE",
+      "message": "LogisticRegression - ROC-AUC: 0.991\u00b10.018",
+      "elapsed_seconds": 109.94595098495483
+    },
+    {
+      "timestamp": "2025-07-04T17:27:06.761563",
+      "step": "MODEL_TRAINING",
+      "message": "Training SVM for SR-ARE",
+      "elapsed_seconds": 109.94597673416138
+    },
+    {
+      "timestamp": "2025-07-04T17:27:07.834388",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 1/5 completed in 1.1s",
+      "elapsed_seconds": 111.01879978179932
+    },
+    {
+      "timestamp": "2025-07-04T17:27:08.772497",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 2/5 completed in 0.9s",
+      "elapsed_seconds": 111.95690894126892
+    },
+    {
+      "timestamp": "2025-07-04T17:27:09.882330",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 3/5 completed in 1.1s",
+      "elapsed_seconds": 113.06674194335938
+    },
+    {
+      "timestamp": "2025-07-04T17:27:10.931083",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 4/5 completed in 1.0s",
+      "elapsed_seconds": 114.11549496650696
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.992504",
+      "step": "CV_FOLD",
+      "message": "SVM - Fold 5/5 completed in 1.1s",
+      "elapsed_seconds": 115.17691683769226
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.992729",
+      "step": "MODEL_TRAINING",
+      "message": "SVM completed in 5.2s",
+      "elapsed_seconds": 115.17714309692383
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.992764",
+      "step": "MODEL_PERFORMANCE",
+      "message": "SVM - ROC-AUC: 0.615\u00b10.045",
+      "elapsed_seconds": 115.17717671394348
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.992796",
+      "step": "MODEL_TRAINING",
+      "message": "All models for SR-ARE completed in 6.8s",
+      "elapsed_seconds": 115.17720985412598
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.992820",
+      "step": "MODEL_SELECTION",
+      "message": "Best model for SR-ARE: RandomForest",
+      "elapsed_seconds": 115.17723393440247
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.992970",
+      "step": "RESULT_SAVING",
+      "message": "Saving results for SR-ARE",
+      "elapsed_seconds": 115.17738389968872
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.998996",
+      "step": "REPORTING",
+      "message": "Creating comprehensive report for SR-ARE",
+      "elapsed_seconds": 115.1834077835083
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.999470",
+      "step": "REPORTING",
+      "message": "Model comparison for SR-ARE completed",
+      "elapsed_seconds": 115.18388295173645
+    },
+    {
+      "timestamp": "2025-07-04T17:27:11.999895",
+      "step": "RESULT_SAVING",
+      "message": "Results saved: results/SR-ARE_full_results.pkl, results/SR-ARE_feature_selector.pkl, results/SR-ARE_best_model.pkl, results/SR-ARE_model_comparison.csv",
+      "elapsed_seconds": 115.18430781364441
+    }
+  ],
+  "timestamp": "2025-07-04T17:27:11.999934"
+}
