@@ -7,7 +7,7 @@ This script demonstrates how to use the clean, modular pipeline classes.
 
 import sys
 from src.pipeline_manager import PipelineManager
-from config import PIPELINE_CONFIG, DEFAULT_TARGET_INDICES
+from config import PIPELINE_CONFIG
 
 def main():
     """Run the Tox21 modeling pipeline."""
@@ -18,9 +18,10 @@ def main():
     try:
         print("🚀 Starting Tox21 modeling pipeline...")
         print(f"📋 Configuration: {len(PIPELINE_CONFIG['models'])} models, {PIPELINE_CONFIG['cv_folds']}-fold CV")
-        print(f"🎯 Targets: {len(DEFAULT_TARGET_INDICES)} targets")
+        print(f"🎯 Targets: All 12 Tox21 targets")
 
-        results = pipeline.run_pipeline(target_indices=DEFAULT_TARGET_INDICES)
+        # Run pipeline for ALL targets (not just the default 2)
+        results = pipeline.run_pipeline()  # No target_indices specified = process all targets
 
         print(f"\n✅ Pipeline completed successfully!")
         print(f"📊 Processed {len(results)} targets")
