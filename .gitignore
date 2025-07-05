@@ -42,10 +42,22 @@ venv.bak/
 # Model files (can be large)
 models/*.pkl
 models/*.joblib
+results/models/*.pkl
+results/*.pkl
+results/*.joblib
 
 # Results (user-generated)
 results/
 example_data/
+
+# Generated output files
+*.pdf
+test_folder/*.pdf
+test_folder/toxicity_predictions.csv
+logs/*.json
+logs/*.log
+results/*.csv
+results/*.json
 
 # Data files (can be large)
 *.sdf
